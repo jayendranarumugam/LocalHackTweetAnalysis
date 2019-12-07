@@ -1,0 +1,78 @@
+﻿@model IEnumerable<LocalHackTweetAnalysis.Models.Value>
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Get))
+{
+
+    <div class="searchBoxForm hide-autocomplete-dropdown">
+
+        <input type="text" id="check" name="search" placeholder="Search" maxlength="20">
+        <input type="submit" name="submit" value="Search">
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.tweetscore)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tweet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.user)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.tweetat)
+        </th>*@
+        <th>
+            Image If any
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.tweetscore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tweet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.tweetat)
+            </td>*@
+            <td>
+                @{string url = "";
+                    if (item.imageDetails.Count() != 0)
+                    {
+                        url = item.imageDetails.Select(a => a.url.FirstOrDefault()).FirstOrDefault();
+                        if(url == null)
+                        {
+                        url = @Url.Content("~/Content/NoimageAvailable.jpg");
+                        }
+                    }
+                    else
+                    {
+                        url = @Url.Content("~/Content/NoimageAvailable.jpg");
+                    }
+                }
+                <img src="@url " height="60" width="60">
+            </td>
+        </tr>
+    }
+
+</table>
+@if (ViewBag.totalRemainingPageSize > 1)
+{
+    @Html.ActionLink("Next Page", "Search", "Home", new { pageNo = ViewBag.pageNo + 1 }, null)
+}
